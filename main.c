@@ -3,6 +3,7 @@
 #include "delay.h"  
 #include "motor.h" 
 #include "timer.h"    
+#include "adc.h"    
 #include "uart1.h" 
 #include "sr04.h" 
 int state=2;
@@ -118,8 +119,14 @@ if (TI)											// 发送中断标志置1时
 			case 0x12: //蜂鸣器
 			 P41 = !P41;
 			break;
+			case 0x13: //ADC
+			 User_Get_ADC_data();
+			break;
+			case 0x14: //SR04
+			 Count_Number_DATA();
+			break;
 		}
-				SBUF=SBUF+0X30;
+				//SendDataByUart1(SBUF+0X30);
     //单片机将接收数据直接发送给电脑端（串口助手）
 	}
 
@@ -141,7 +148,7 @@ void main()
 	 Timer4Init(); //定时器初始化,计数时间使用
 	
 	 Uart1_Init(); //串口初始化 
-
+		ADC_Init_Port(); //ADC初始化
 	 SR04_Init_Port(); // 超声波IO初始化
 	//SendDataByUart1(0x38);
 	/*
@@ -155,6 +162,8 @@ void main()
 while(1)
 	{ 
 	 //SendDataByUart1(0x37);
+		
+		
 		if(csb_toggle){
 		if(Time_Count>=10) //100ms更新一次超声波距离
 			{				
@@ -168,7 +177,6 @@ while(1)
 		}			
 		else if(S<15&&S>=10)
 					{ 
-						
 						Car_State_number=2;//后退
 						P41=1;
 						delay_ms(750);
@@ -193,9 +201,9 @@ P43=1;
            Car_State_number=2;//后退
 					}
   }
-		if(hwxj_toggle){
+		//if(hwxj_toggle){
 			
-		}
+		//}
 	}
 }
 

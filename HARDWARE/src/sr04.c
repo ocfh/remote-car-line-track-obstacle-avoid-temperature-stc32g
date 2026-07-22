@@ -39,12 +39,19 @@ unsigned int S=0;
 bit  flag =0;
 void Calculation_Data(void)
 {
+	 unsigned char temp=0,temp1=0,temp2=0,temp3=0;
 	 time=TH0*256+TL0;
 	 TH0=0;
 	 TL0=0;
 	 S=(time*1.87)/100/2;     //Ëã³öÀ´ÊÇCM  
-	
-	
+	     temp=(S/1000)+'0'; 
+	     temp1=(S/100%10)+'0'; 
+	     temp2=(S/10%10)+'0';
+	     temp3=(S%10)+'0';
+			 SendDataByUart1(temp);
+			 SendDataByUart1(temp1 );
+			 SendDataByUart1(temp2);
+			 SendDataByUart1(temp3); 				
 }
 void Adjust_Pwm_data(void)
 {

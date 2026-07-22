@@ -359,6 +359,11 @@
               <FileType>1</FileType>
               <FilePath>.\HARDWARE\src\sr04.c</FilePath>
             </File>
+            <File>
+              <FileName>adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\HARDWARE\src\adc.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
