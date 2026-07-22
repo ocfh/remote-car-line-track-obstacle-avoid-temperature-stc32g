@@ -14,6 +14,7 @@ typedef enum
 extern unsigned int S; 
 extern uint8 Car_State_number ; //小车状态值	
 extern uint8 pwm ; //小车状态值	
+extern char stemp,stemp1,stemp2,stemp3;
 extern bit  flag ; 
 void SR04_Init_Port(void);
 void Calculation_Data(void);

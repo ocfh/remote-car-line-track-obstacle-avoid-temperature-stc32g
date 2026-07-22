@@ -9,7 +9,7 @@
 
 #define VREFH_ADDR  0x07
 #define VREFL_ADDR  0x08 
-
+extern char atemp,atemp1,atemp2,atemp3;
 void	ADC_config(void); 
 uint16	Get_ADC12bitResult(uint8 channel)	;
 void ADC_Init_Port(void);

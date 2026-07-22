@@ -4,6 +4,7 @@
 #include "stdio.h" 
 #include <stdio.h>
 int BGV,BGP,VCC;
+extern char atemp=0,atemp1=0,atemp2=0,atemp3=0;
 void	ADC_config(void)
 {	
 	P_SW2 |= 0x80;		      //将EAXFR位置1，以访问在XDATA区域的扩展SFR
@@ -23,7 +24,7 @@ uint16	Get_ADC12bitResult(uint8 channel)
     ADC_RESL = 0;       //将ADC转换结果低位寄存器ADC_RESL清空
 
     ADC_CONTR = (ADC_CONTR & 0xF0) | 0x40 | channel;  //启动AD转换并选择通道
-   delay_ms(200); 
+   
 	  while((ADC_CONTR & 0x20) == 0) ;   //等待AD转换完成
     ADC_CONTR &=0xDF;                    //清AD转换完成标志
     return  (((uint16)ADC_RES << 8) | ADC_RESL);
@@ -34,8 +35,6 @@ void ADC_Init_Port(void)
 	
   P0M0 = 0x00;	                  //设置P0.1为高阻输入  0000 0010 
 	P0M1 = 0x02;	
-	
-	
 	ADC_config();
 }
 void User_Get_ADC_data(void)
@@ -63,17 +62,15 @@ void User_Get_ADC_data(void)
 }	 
 void Uart_Send_ADC_data(uint16 ADC_DATA)
 {  
-	  unsigned char temp=0,temp1=0,temp2=0,temp3=0;
-	     temp=(ADC_DATA/1000)+'0'; 
-	     temp1=(ADC_DATA/100%10)+'0'; 
-	     temp2=(ADC_DATA/10%10)+'0';
-	     temp3=(ADC_DATA%10)+'0';
-			 SendDataByUart1(temp);
-			 SendDataByUart1(temp1);
-			 SendDataByUart1(temp2);
-			 SendDataByUart1(temp3); 		
-	
+	     atemp=(ADC_DATA/1000)+'0'; 
+	     atemp1=(ADC_DATA/100%10)+'0'; 
+	     atemp2=(ADC_DATA/10%10)+'0';
+	     atemp3=(ADC_DATA%10)+'0';
 }
+
+
+
+
 
 
 
