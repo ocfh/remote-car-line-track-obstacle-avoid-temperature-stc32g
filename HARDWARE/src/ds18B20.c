@@ -3,7 +3,7 @@
 #define uchar unsigned char
 #define uint  unsigned int
 
-sbit DQ = P4^4;				/*DQ = P07  P0.7 ds18b20的信号线*/
+sbit DQ = P4^7;				/*DQ = P07  P0.7 ds18b20的信号线*/
 extern char dtemp=0,dtemp1=0,dtemp2=0,dtemp3=0;
 void delay_us_ds18B20(unsigned int nus);		//DS18B20
 void Reset_ds18b20(void);						//复位DS18B20    

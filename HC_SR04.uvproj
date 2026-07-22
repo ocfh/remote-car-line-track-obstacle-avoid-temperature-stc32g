@@ -369,6 +369,11 @@
               <FileType>1</FileType>
               <FilePath>.\HARDWARE\src\ds18B20.c</FilePath>
             </File>
+            <File>
+              <FileName>hw.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\HARDWARE\src\hw.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

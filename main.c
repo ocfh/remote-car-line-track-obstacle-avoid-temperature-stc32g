@@ -8,6 +8,7 @@
 #include "uart1.h" 
 #include "sr04.h" 
 #include "oledfont.h" 
+#include "hw.h"  
 sbit   OLED_SDA = P4^4;
 sbit   OLED_SCL = P4^5;
 int state=2;
@@ -497,6 +498,7 @@ void main()
 	 Uart1_Init(); //串口初始化 
 		ADC_Init_Port(); //ADC初始化
 	 SR04_Init_Port(); // 超声波IO初始化
+	HW_Init_Port(); //红外端口
 	OLED_Init();			//初始化OLED  
 	OLED_Clear();//更新显示
 	//SendDataByUart1(0x38);
@@ -512,6 +514,7 @@ void main()
 	start_ds18b20();
 	User_Get_ADC_data();
 	Count_Number_DATA();
+	get_ds18b20();
 while(1)
 	{ 
 		delay_ms(1000);
@@ -551,11 +554,7 @@ while(1)
 	OLED_ShowChar8X16(3,2,'m');
 	OLED_ShowChar8X16(3,3,'p');
 	OLED_ShowChar8X16(3,4,':');
-	OLED_ShowChar8X16(3,5,'0');
-	OLED_ShowChar8X16(3,6,'0');
 	OLED_ShowChar8X16(3,7,'.');
-	OLED_ShowChar8X16(3,8,'0');
-	OLED_ShowChar8X16(3,9,'0');
 	OLED_ShowChar8X16(3,10,'^');
 	OLED_ShowChar8X16(3,11,'C');
 	
@@ -567,7 +566,10 @@ while(1)
 	OLED_ShowChar8X16(2,7,stemp1);
 	OLED_ShowChar8X16(2,8,stemp2);
 	OLED_ShowChar8X16(2,9,stemp3);
-	
+	OLED_ShowChar8X16(3,5,dtemp);
+	OLED_ShowChar8X16(3,6,dtemp1);
+	OLED_ShowChar8X16(3,8,dtemp2);
+	OLED_ShowChar8X16(3,9,dtemp3);
 	if(csb_toggle){
 	OLED_ShowChar8X16(1,8,'W');
 	OLED_ShowChar8X16(1,9,'a');
@@ -664,9 +666,135 @@ P43=1;
 					}
   }
 		
-		//if(hwxj_toggle){
-			
-		//}
+		if(hwxj_toggle){
+			if(Get_HW_MR==1&&Get_HW_ML==1&&Get_HW_R==1&&Get_HW_L==1)
+			 {   
+					 Car_State_number=5;  //停车
+			 }else{
+		
+										/******************状态一：直行状态****************************************/	
+												//情况一：黑线在正中间，都没有识别到，直走
+												if(Get_HW_L==0&&Get_HW_ML==0&&Get_HW_MR==0&&Get_HW_R==0)
+												{
+													pwm=15;
+													Car_State_number=1; //慢速直走 
+												}
+												//情况二：中间两个识别到黑线，直走
+												if(Get_HW_L==0&&Get_HW_ML==1&&Get_HW_MR==1&&Get_HW_R==0)
+												{   				
+													while(1) //防止由于拐弯过大，要纠正回来
+													{  
+														pwm=15;
+														Car_State_number=1; //慢速直走 
+														if(Get_HW_MR==0||Get_HW_ML==0)
+														{  
+															break; //跳出循环
+														} 
+													}	
+												}
+												//情况三：左中侧检测到，稍微左转后直走
+												if(Get_HW_L==0&&Get_HW_ML==1&&Get_HW_MR==0&&Get_HW_R==0)// 慢左转
+												{   							
+													while(1) //防止由于拐弯过大，要纠正回来
+													{  
+														pwm=50;
+														   Car_State_number=3; 					
+														if(Get_HW_ML==0||Get_HW_MR==1||Get_HW_R==1)
+														{  
+															break; //跳出循环
+														} 
+													}	
+												}
+												
+												//情况四：右中侧检测到，稍微右转后直走
+												if(Get_HW_L==0&&Get_HW_ML==0&&Get_HW_MR==1&&Get_HW_R==0)//慢右转
+												{   							
+													while(1) //防止由于拐弯过大，要纠正回来
+													{  
+														pwm=50;
+														   Car_State_number=4; //慢右转
+														if(Get_HW_MR==0||Get_HW_ML==1||Get_HW_L==0)
+														{  
+															break; //跳出循环
+														} 
+													}	
+												}	
+												
+										/******************状态二：左转状态****************************************/		
+												//情况一：左外侧检测到，大拐弯
+												if(Get_HW_L==1&&Get_HW_ML==0&&Get_HW_MR==0&&Get_HW_R==0)//
+												{    										
+													while(1) //防止由于拐弯过大，要纠正回来
+													{  
+														pwm=80;
+														  Car_State_number=3; //快速左转				
+														if(Get_HW_ML==1||Get_HW_MR==1||Get_HW_R==1)
+														{  
+															break; //跳出循环
+														} 
+													}	
+												}
+												//情况二：左外测和左中测检测到，大拐弯
+												if(Get_HW_L==1&&Get_HW_ML==1&&Get_HW_MR==0&&Get_HW_R==0)
+												{    										
+													while(1) //防止由于拐弯过大，要纠正回来
+													{  
+														pwm=80;
+														   Car_State_number=3; //快速左转
+				
+														if(Get_HW_MR==1||Get_HW_R==1)
+														{  
+															break; //跳出循环
+														} 
+													}	
+												}
+												
+										/******************状态三：右转状态****************************************/						
+												//右外侧检测到，大拐弯
+												if(Get_HW_L==0&&Get_HW_ML==0&&Get_HW_MR==0&&Get_HW_R==1)
+												{   						  										
+													while(1) //防止由于拐弯过大，要纠正回来
+													{  
+														pwm=80;
+														Car_State_number=4; //快速右转 
+
+														if(Get_HW_MR==1||Get_HW_ML==1||Get_HW_L==1)
+														{  
+															break; //跳出循环
+														} 
+													}	
+												}	
+												//右侧和右外侧检测到，大拐弯
+												if(Get_HW_L==0&&Get_HW_ML==0&&Get_HW_MR==1&&Get_HW_R==1)
+												{   						  										
+													while(1) //防止由于拐弯过大，要纠正回来
+													{  
+														pwm=80;
+														Car_State_number=4; //快速右转 
+
+														if(Get_HW_ML==1||Get_HW_L==1)
+														{  
+															break; //跳出循环
+														} 
+													}	
+												}	
+										/******************状态四：直角处理****************************************/						
+												//右外侧检测到，大拐弯
+												if(Get_HW_L==0&&Get_HW_ML==1&&Get_HW_MR==1&&Get_HW_R==1)
+												{   						  																							 
+													  while(1)
+														{	
+															pwm=85;
+														    Car_State_number=4; //快速右转 
+																if(Get_HW_L==1)
+																{  
+																	break; //跳出循环
+																} 																
+														}
+												}	
+
+	   }
+		}
 	}
 }
 
