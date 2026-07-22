@@ -2,7 +2,8 @@
 #include "intrins.h"
 #include "delay.h"  
 #include "motor.h" 
-#include "timer.h"    
+#include "timer.h"  
+#include "ds18B20.h"   
 #include "adc.h"    
 #include "uart1.h" 
 #include "sr04.h" 
@@ -508,7 +509,7 @@ void main()
 	*/
 	//OLED_ColorTurn(1);
 	
-
+	start_ds18b20();
 	User_Get_ADC_data();
 	Count_Number_DATA();
 while(1)

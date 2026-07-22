@@ -364,6 +364,11 @@
               <FileType>1</FileType>
               <FilePath>.\HARDWARE\src\adc.c</FilePath>
             </File>
+            <File>
+              <FileName>ds18B20.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\HARDWARE\src\ds18B20.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

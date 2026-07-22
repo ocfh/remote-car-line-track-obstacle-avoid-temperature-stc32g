@@ -3,6 +3,7 @@
 #include "motor.h" 
 #include "adc.h" 
 #include "uart1.h" 
+#include "ds18B20.h" 
 uint16 Time_Count = 0; 
 uint8 Time_Count_pwm = 0; 
 uint8 PWM_Count = 30; //Õ¼¿Õ±È
@@ -41,14 +42,19 @@ void timer4_int (void) interrupt 20
 		{
 			//User_Get_ADC_data();
 			Count_Number_DATA();
+			get_ds18b20();
 				SendDataByUart1(atemp);
 			 SendDataByUart1(atemp1);
 			 SendDataByUart1(atemp2);
 			 SendDataByUart1(atemp3); 	
-			SendDataByUart1(stemp);
+				SendDataByUart1(stemp);
 			 SendDataByUart1(stemp1);
 			 SendDataByUart1(stemp2);
-			 SendDataByUart1(stemp3); 		
+			 SendDataByUart1(stemp3);
+				SendDataByUart1(dtemp);
+			 SendDataByUart1(dtemp1);
+			 SendDataByUart1(dtemp2);
+			 SendDataByUart1(dtemp3);			
 			Time_Count=0;
 		}	 
   if(++Time_Count_pwm>100)
@@ -65,7 +71,6 @@ void timer4_int (void) interrupt 20
 
 	
 } 
-
 
 
 
