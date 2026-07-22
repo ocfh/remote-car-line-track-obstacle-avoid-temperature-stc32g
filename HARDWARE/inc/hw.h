@@ -4,9 +4,6 @@
 #include <STC32G.H> 
 #include "timer.h"   
 
-#define  Get_HW_R  P47
-
-#define  Get_HW_L  P33 
 
 #define  Get_HW_MR  P06
 

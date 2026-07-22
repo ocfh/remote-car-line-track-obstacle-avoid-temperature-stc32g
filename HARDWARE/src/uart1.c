@@ -2,6 +2,7 @@
 #include "delay.h" 
 #include "delay.h"  
 #include "timer.h"   
+
 void Uart1_Init(void)
 {	 
 	P3M1 = 0x00; // 清除P3.6和P3.7的位，设置为准双向口	P3M0 &= 0xFC;	                  //设置P3.0 ,P3.1为准双向口  
@@ -36,6 +37,8 @@ void Uart1_Init(void)
 	//B_TX1_Busy = 0;
 	delay_ms(100);
 }
+
+
 void SendDataByUart1(unsigned char dat)
 {
 	 ES = 0;  
@@ -44,13 +47,14 @@ void SendDataByUart1(unsigned char dat)
 	TI = 0;		//清除发送中断标志位	
 	ES =  1; 
 } 
+
+
 void PrintString1(unsigned char *puts)
 {
     for (; *puts != 0;  puts++)     //遇到停止符0结束
     {
         SBUF = *puts;
-        //B_TX1_Busy = 1;
-        //while(B_TX1_Busy);
+
     }
 }
 

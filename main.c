@@ -16,7 +16,7 @@ int state=2;
 char csb_toggle = 0;
 char hwxj_toggle = 0;
 char oled = 1;
-//-----------------OLED函数定义----------------  					   
+					   
 void IIC_Start();
 void delay(void);//声明延时函数
 void IIC_Stop();
@@ -35,11 +35,7 @@ void OLED_DisplayTurn(unsigned char oled_Display);
 void OLED_ShowChar6X8(unsigned char chr_y,unsigned char chr_x,unsigned char chr);
 void OLED_ShowChar8X16(unsigned char chr_y,unsigned char chr_x,unsigned char chr);
 void OLED_Show_HZ16X16(unsigned char hz_y,unsigned char hz_x,unsigned char no);   
-//-----------------OLED函数声明----------------  					   
 
-/******************************************/
-//起始信号
-/******************************************/
 void IIC_Start()
 {
 	OLED_SCL = 1;
@@ -47,26 +43,20 @@ void IIC_Start()
 	OLED_SDA = 0;
 	OLED_SCL = 0;
 }
-/******************************************/
-//停止信号
-/******************************************/
+
 void IIC_Stop()
 {
 	OLED_SCL = 1;
 	OLED_SDA = 0;
 	OLED_SDA = 1;
 }
-/******************************************/
-//等待I2信号响应
-/******************************************/
+
 void IIC_Wait_Ack()
 {
 	OLED_SCL = 1;
 	OLED_SCL = 0;
 }
-/******************************************/
-//写入一个字节
-/******************************************/
+
 void Write_IIC_Byte(unsigned char IIC_Byte)
 {
 	static unsigned char i;
@@ -94,11 +84,7 @@ void Write_IIC_Byte(unsigned char IIC_Byte)
 	}
 }
 
-/******************************************/
-//发送一个字节
-//向屏的控制器SSD1306写入一个字节。
-//mode:数据/命令标志 0,表示命令;1,表示数据;
-/******************************************/
+
 void Write_IIC_Command(unsigned char IIC_Command)
 {
 	IIC_Start();
@@ -110,9 +96,7 @@ void Write_IIC_Command(unsigned char IIC_Command)
 	IIC_Wait_Ack();	
 	IIC_Stop();
 }
-/**********************************************
-// IIC写数据
-**********************************************/
+
 void Write_IIC_Data(unsigned char IIC_Data)
 {
 	IIC_Start();
@@ -124,36 +108,28 @@ void Write_IIC_Data(unsigned char IIC_Data)
 	IIC_Wait_Ack();	
 	IIC_Stop();
 }
-//**************************************************************************
-//坐标设置
-//**************************************************************************
+
 void OLED_Set_Pos(unsigned char x, unsigned char y) 
 { 	
 	Write_IIC_Command(0xb0+y);
 	Write_IIC_Command(((x&0xf0)>>4)|0x10);
 	Write_IIC_Command(x&0x0f); 
 } 
-//**************************************************************************
-//开启OLED显示  
-//**************************************************************************
+
 void OLED_Display_On(void)
 {
 	Write_IIC_Command(0x8d);//电荷泵使能
 	Write_IIC_Command(0x14);//开启电荷泵
 	Write_IIC_Command(0xaf);//点亮屏幕
 }
-//**************************************************************************
-//关闭OLED显示
-//**************************************************************************
+
 void OLED_Display_Off(void)
 {
 	Write_IIC_Command(0X8D);  //电荷泵使能
 	Write_IIC_Command(0X10); //关闭电荷泵
 	Write_IIC_Command(0XAE); //关闭屏幕 
 }
-//**************************************************************************
-//初始化SSD1306			
-//**************************************************************************
+
 void OLED_Init(void)
 { 	
  
@@ -192,9 +168,7 @@ void OLED_Init(void)
 	
 	Write_IIC_Command(0xAF);//--turn on oled panel
 }
-//**************************************************************************
-//清屏函数,清完屏,整个屏幕是黑色的!和没点亮一样!!!	  
-//**************************************************************************
+
 void OLED_Clear(void)  
 {  
 	static unsigned char i,n;		    
@@ -212,10 +186,7 @@ void OLED_Clear(void)
 }
 
 	
-/******************************************/
-//反显函数
-//参数：oled_Color，值：0正常显示，1 反色显示
-/******************************************/
+
 void OLED_ColorTurn(unsigned char oled_Color)
 {
 	if(oled_Color==0)
@@ -227,10 +198,7 @@ void OLED_ColorTurn(unsigned char oled_Color)
 		Write_IIC_Command(0xA7);//反色显示
 	}
 }
-/******************************************/
-//屏幕旋转180度
-//参数：oled_Display，值：0正常显示，1 反转显示
-/******************************************/
+
 void OLED_DisplayTurn(unsigned char oled_Display)
 {
 	if(oled_Display==0)
@@ -244,11 +212,7 @@ void OLED_DisplayTurn(unsigned char oled_Display)
 		Write_IIC_Command(0xA0);
 	}
 }
-//**************************************************************************
-//此函数功能：在指定位置显示一个8X8点阵的字符、数字，
-//一行共有128点，显示8点的字符可以有chr_x：0-15,分别代表每行的列数，0-15共16个8*8点阵的内容
-//一列共有 64点，显示8点的字符可以有chr_y：0-7,分别代表行数，0-7共8行个8*8点阵的内容 
-//**************************************************************************
+
 void OLED_ShowChar6X8(unsigned char chr_y,unsigned char chr_x,unsigned char chr)
 {      	
 	static unsigned char c,i;	
@@ -270,11 +234,7 @@ void OLED_ShowChar6X8(unsigned char chr_y,unsigned char chr_x,unsigned char chr)
 	}	
 }
 
-//**************************************************************************
-//此函数功能：在指定位置显示一个8X16点阵的字符、数字，占用半个汉字位置
-//一行共有128点，显示8点的字符可以有X：0-15,分别代表每行的列数，0-15共16个8*16点阵的内容
-//一列共有 64点，显示16点的字符可以有X：0-3,分别代表行数，0-3共4行个8*16点阵的内容 
-//**************************************************************************
+
 void OLED_ShowChar8X16(unsigned char chr_y,unsigned char chr_x,unsigned char chr)
 {      	
 	static unsigned char c,i;	
@@ -302,11 +262,7 @@ void OLED_ShowChar8X16(unsigned char chr_y,unsigned char chr_x,unsigned char chr
 		Write_IIC_Data(F8X16[c*16+i+8]);
 	}
 }
-//**************************************************************************
-//此函数功能：在指定位置显示一个16X16点阵的汉字（字符、数字）
-//显示汉字hz_x:0-7,分别代表每行的列数，0-7共8个16*16点阵汉字 
-//显示汉字hz_y:0-3,分别代表每页行数，因为64点阵最多显示4行汉字
-//**************************************************************************
+
 void OLED_Show_HZ16X16(unsigned char hz_y,unsigned char hz_x,unsigned char no)
 {      			    
 	static unsigned char t,adder=0;
@@ -329,13 +285,9 @@ void OLED_Show_HZ16X16(unsigned char hz_y,unsigned char hz_x,unsigned char no)
     }					
 }
  
-/************************************************/
-/***第1类函数：无参数返回、    同时无参数传递********/
-/**              void     delay   (void)**/
-/************************************************/
+
 void delay(void)//定义延时函数
 {
-	 //定义静态局部变量，加上静态static 
 	static unsigned int i,j;
 
 	for (i=0;i<60000;i++)//
@@ -366,12 +318,12 @@ void yanshi(float a) //延时 单位：秒
 void int_uart(void) interrupt  4	
 {
 
-if (TI)											// 发送中断标志置1时
+if (TI)										
 	{
-		TI = 0;										// 清零发送中断标志
+		TI = 0;									
 	}
 	
-		if (RI)											// 接收中断标志置1时
+		if (RI)									
 	{
 		RI = 0;	
 		switch(SBUF)
@@ -448,7 +400,9 @@ if (TI)											// 发送中断标志置1时
 			break;
 			case 0x08: //超声波
 			 csb_toggle = !csb_toggle;
-			if(!csb_toggle){
+			if(!csb_toggle)
+				{
+				
 				Car_State_number=5;delay_ms(1500);Car_State_number=5;P42=0;P43=0;P41=0;
 			}
 			break;
@@ -475,41 +429,33 @@ if (TI)											// 发送中断标志置1时
 			break;
 		}
 				//SendDataByUart1(SBUF+0X30);
-    //单片机将接收数据直接发送给电脑端（串口助手）
+    //单片机接收数据
 	}
 
 }
 
 
-/********************* 主函数 *************************/
+
 void main()
 {
-	static unsigned int num,no,i,j;//定义静态局部变量，加上静态static 
-   WTST = 0;  //设置程序指令延时参数，赋值为0可将CPU执行指令的速度设置为最快
-   EAXFR = 1; //扩展寄存器(XFR)访问使能
-   CKCON = 0; //提高访问XRAM速度
+	static unsigned int num,no,i,j;
+   WTST = 0; 
+   EAXFR = 1; 
+   CKCON = 0;
 	 
-	 Motor_Init_Port(); //电机初始化
+	 Motor_Init_Port(); 
 	
-	 Timer0Init(); //定时器 初始化 ,超声波使用
+	 Timer0Init(); 
 	 
-	 Timer4Init(); //定时器初始化,计数时间使用
+	 Timer4Init();
 	
-	 Uart1_Init(); //串口初始化 
-		ADC_Init_Port(); //ADC初始化
-	 SR04_Init_Port(); // 超声波IO初始化
-	HW_Init_Port(); //红外端口
-	OLED_Init();			//初始化OLED  
-	OLED_Clear();//更新显示
-	//SendDataByUart1(0x38);
-	/*
-			case 1:  Car_Forword(25);break;
-			case 2:  Car_Back(50);break;
-			case 3:  Car_Turn_Left(90);break;
-			case 4:  Car_Turn_Right(90);break;
-			case 5:  Car_Stop();break;
-	*/
-	//OLED_ColorTurn(1);
+	 Uart1_Init();
+		ADC_Init_Port();
+	 SR04_Init_Port(); 
+	HW_Init_Port(); 
+	OLED_Init();			
+	OLED_Clear();
+
 	
 	start_ds18b20();
 	User_Get_ADC_data();
@@ -517,7 +463,7 @@ void main()
 	get_ds18b20();
 while(1)
 	{ 
-		delay_ms(1000);
+
 		OLED_Clear();
 		if(oled){
 	 //SendDataByUart1(0x37);
@@ -629,12 +575,12 @@ while(1)
 }
 	
 		if(csb_toggle){
-		if(Time_Count>=10) //100ms更新一次超声波距离
+		if(Time_Count>=10)
 			{				
-				 Count_Number_DATA(); //测量距离	
-				 Time_Count=0; //重新计时
+				 Count_Number_DATA(); 
+				 Time_Count=0;
 	    }  
-		if(S>=15) //直走
+		if(S>=15) 
 		{
 			P41=0;
       Car_State_number=1; 
@@ -665,41 +611,32 @@ P43=1;
            Car_State_number=2;//后退
 					}
   }
-		
+		OLED_ShowChar8X16(1,14,Get_HW_MR);
+  OLED_ShowChar8X16(1,15,Get_HW_ML);
 		if(hwxj_toggle){
-			if(Get_HW_MR==1&&Get_HW_ML==1&&Get_HW_R==1&&Get_HW_L==1)
+			
+			if(Get_HW_MR==1&&Get_HW_ML==1)
 			 {   
-					 Car_State_number=5;  //停车
-			 }else{
+					pwm=15;
+					Car_State_number=1; //慢速直走 
+			 }
 		
 										/******************状态一：直行状态****************************************/	
 												//情况一：黑线在正中间，都没有识别到，直走
-												if(Get_HW_L==0&&Get_HW_ML==0&&Get_HW_MR==0&&Get_HW_R==0)
+												if(Get_HW_ML==0&&Get_HW_MR==0)
 												{
 													pwm=15;
 													Car_State_number=1; //慢速直走 
 												}
-												//情况二：中间两个识别到黑线，直走
-												if(Get_HW_L==0&&Get_HW_ML==1&&Get_HW_MR==1&&Get_HW_R==0)
-												{   				
-													while(1) //防止由于拐弯过大，要纠正回来
-													{  
-														pwm=15;
-														Car_State_number=1; //慢速直走 
-														if(Get_HW_MR==0||Get_HW_ML==0)
-														{  
-															break; //跳出循环
-														} 
-													}	
-												}
+
 												//情况三：左中侧检测到，稍微左转后直走
-												if(Get_HW_L==0&&Get_HW_ML==1&&Get_HW_MR==0&&Get_HW_R==0)// 慢左转
+												if(Get_HW_ML==1&&Get_HW_MR==0)// 慢左转
 												{   							
 													while(1) //防止由于拐弯过大，要纠正回来
 													{  
-														pwm=50;
+														pwm=15;
 														   Car_State_number=3; 					
-														if(Get_HW_ML==0||Get_HW_MR==1||Get_HW_R==1)
+														if(Get_HW_ML==0||Get_HW_MR==1)
 														{  
 															break; //跳出循环
 														} 
@@ -707,111 +644,96 @@ P43=1;
 												}
 												
 												//情况四：右中侧检测到，稍微右转后直走
-												if(Get_HW_L==0&&Get_HW_ML==0&&Get_HW_MR==1&&Get_HW_R==0)//慢右转
+												if(Get_HW_ML==0&&Get_HW_MR==1)//慢右转
 												{   							
 													while(1) //防止由于拐弯过大，要纠正回来
 													{  
-														pwm=50;
+														pwm=15;
 														   Car_State_number=4; //慢右转
-														if(Get_HW_MR==0||Get_HW_ML==1||Get_HW_L==0)
+														if(Get_HW_MR==0||Get_HW_ML==1)
 														{  
 															break; //跳出循环
 														} 
 													}	
 												}	
 												
-										/******************状态二：左转状态****************************************/		
+										/**********************************	
 												//情况一：左外侧检测到，大拐弯
-												if(Get_HW_L==1&&Get_HW_ML==0&&Get_HW_MR==0&&Get_HW_R==0)//
+												if(Get_HW_ML==0&&Get_HW_MR==0)//
 												{    										
 													while(1) //防止由于拐弯过大，要纠正回来
 													{  
 														pwm=80;
 														  Car_State_number=3; //快速左转				
-														if(Get_HW_ML==1||Get_HW_MR==1||Get_HW_R==1)
+														if(Get_HW_ML==1||Get_HW_MR==1)
 														{  
 															break; //跳出循环
 														} 
 													}	
 												}
 												//情况二：左外测和左中测检测到，大拐弯
-												if(Get_HW_L==1&&Get_HW_ML==1&&Get_HW_MR==0&&Get_HW_R==0)
+												if(Get_HW_ML==1&&Get_HW_MR==0)
 												{    										
 													while(1) //防止由于拐弯过大，要纠正回来
 													{  
 														pwm=80;
 														   Car_State_number=3; //快速左转
 				
-														if(Get_HW_MR==1||Get_HW_R==1)
+														if(Get_HW_MR==1)
 														{  
 															break; //跳出循环
 														} 
 													}	
 												}
 												
-										/******************状态三：右转状态****************************************/						
+								************状态三：右转状态************************************					
 												//右外侧检测到，大拐弯
-												if(Get_HW_L==0&&Get_HW_ML==0&&Get_HW_MR==0&&Get_HW_R==1)
+												if(Get_HW_ML==0&&Get_HW_MR==0)
 												{   						  										
 													while(1) //防止由于拐弯过大，要纠正回来
 													{  
 														pwm=80;
 														Car_State_number=4; //快速右转 
 
-														if(Get_HW_MR==1||Get_HW_ML==1||Get_HW_L==1)
+														if(Get_HW_MR==1||Get_HW_ML==1)
 														{  
 															break; //跳出循环
 														} 
 													}	
 												}	
 												//右侧和右外侧检测到，大拐弯
-												if(Get_HW_L==0&&Get_HW_ML==0&&Get_HW_MR==1&&Get_HW_R==1)
+												if(Get_HW_ML==0&&Get_HW_MR==1)
 												{   						  										
 													while(1) //防止由于拐弯过大，要纠正回来
 													{  
 														pwm=80;
 														Car_State_number=4; //快速右转 
 
-														if(Get_HW_ML==1||Get_HW_L==1)
+														if(Get_HW_ML==1)
 														{  
 															break; //跳出循环
 														} 
 													}	
 												}	
-										/******************状态四：直角处理****************************************/						
+									************状态四：直角处理**********************************					
 												//右外侧检测到，大拐弯
-												if(Get_HW_L==0&&Get_HW_ML==1&&Get_HW_MR==1&&Get_HW_R==1)
+												if(Get_HW_ML==1&&Get_HW_MR==1)
 												{   						  																							 
 													  while(1)
 														{	
 															pwm=85;
 														    Car_State_number=4; //快速右转 
-																if(Get_HW_L==1)
+																if(Get_HW_ML==1)
 																{  
 																	break; //跳出循环
 																} 																
 														}
-												}	
+												}	***/	
 
-	   }
+	   
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
