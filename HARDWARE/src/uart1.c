@@ -38,11 +38,12 @@ void Uart1_Init(void)
 }
 void SendDataByUart1(unsigned char dat)
 {
+	 ES = 0;  
   SBUF = dat;                 //写数据到UART数据寄存器
 	while(TI==0);//等待发送完成
 	TI = 0;		//清除发送中断标志位	
+	ES =  1; 
 } 
-
 void PrintString1(unsigned char *puts)
 {
     for (; *puts != 0;  puts++)     //遇到停止符0结束
